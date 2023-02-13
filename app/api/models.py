@@ -50,6 +50,14 @@ class MyUser(AbstractBaseUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+    
+    INCOME = "INCOME"
+    OUTCOME = "OUTCOME"
+    
+    TYPE_USER = [
+        (INCOME, "student"),
+        (OUTCOME, "teacher"),
+    ]
 
     def __str__(self):
         return self.email
@@ -70,6 +78,24 @@ class MyUser(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
+class Category(models.Model):
+    id: models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    label: models.StringField(max_lenght=150)
+
+    def __str__(self):
+        return self.id
+
+class Exercice(models.Model):
+    id: models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    label: models.StringField(max_length=150)
+    answer: models.StringField(max_length=150)
+    doneBy: models.ForeignKey(MyUser, related_name='student', on_delete=models.CASCADE)
+    createdBy: models.ForeignKey(MyUser, related_name='teacher', on_delete=models.CASCADE)
+    category: models.ForeignKey(Category, related_name='type_exercice', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.id
+    
 
 class Categorie(models.Model):
     INCOME = "INCOME"

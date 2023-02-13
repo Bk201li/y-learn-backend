@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MyUser, Budget, Categorie
+from .models import MyUser, Budget, Categorie, Exercice
 
 
 class BudgetSerializer(serializers.ModelSerializer):
@@ -57,10 +57,15 @@ class PasswordChangeSerializer(serializers.Serializer):
 class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categorie
-        fields = ['id', 'nom', 'description', 'type', 'parent_categorie', 'budgets']
+        fields = ['id', 'label']
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = ['id', 'email', 'first_name', 'last_name', 'date_of_birth', 'is_active', 'total_amount', 'is_admin']
+
+class ExerciceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exercice
+        fields = ['id', 'label', 'answer', 'doneBy', 'createdBy', 'category']
