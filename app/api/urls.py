@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import RegistrationView ,ChangePasswordView, BudgetViewset, CategorieViewset, UserViewSet, getRoutes
+from .views import RegistrationView ,ChangePasswordView, ExerciceViewset, CategoryViewset, UserViewSet, getRoutes
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -7,8 +7,8 @@ from rest_framework_simplejwt.views import (
 from rest_framework import routers
 
 router = routers.SimpleRouter()
-router.register('budgets', BudgetViewset, basename='budget')
-router.register('categories', CategorieViewset, basename='categorie')
+router.register('exercices', ExerciceViewset, basename='exercice')
+router.register('categories', CategoryViewset, basename='category')
 router.register("users", UserViewSet)
 
 

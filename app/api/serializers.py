@@ -1,18 +1,5 @@
 from rest_framework import serializers
-from .models import MyUser, Budget, Categorie
-
-
-class BudgetSerializer(serializers.ModelSerializer):
-    categorie_name = serializers.SerializerMethodField('get_category_name')
-
-    def get_category_name(self, obj):
-        if obj.categorie_id:
-            return obj.categorie.nom
-
-    class Meta:
-        model = Budget
-        fields = ["id", "short_description", "montant", "type", "date", "categorie", "categorie_name", "utilisateur"]
-
+from .models import MyUser, Category, Exercice
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
@@ -52,15 +39,21 @@ class PasswordChangeSerializer(serializers.Serializer):
         if not self.context["request"].user.check_password(value):
             raise serializers.ValidationError({"current_password": "Does not match"})
         return value
-        
 
-class CategorieSerializer(serializers.ModelSerializer):
+
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Categorie
-        fields = ['id', 'nom', 'description', 'type', 'parent_categorie', 'budgets']
+        model = Category
+        fields = ['id', 'label', 'description']
+
+
+class ExerciceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exercice
+        fields = ['id', 'label', 'answer', 'doneBy', 'createdBy', 'categoryId']
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
-        fields = ['id', 'email', 'first_name', 'last_name', 'date_of_birth', 'is_active', 'total_amount', 'is_admin']
+        fields = ['id', 'email', 'first_name', 'last_name', 'date_of_birth', 'is_active', 'is_admin', 'status']

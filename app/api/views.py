@@ -13,8 +13,8 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 import django_filters
 from django_filters import rest_framework as filters
-from .models import Budget, Categorie, MyUser
-from .serializers import RegistrationSerializer, PasswordChangeSerializer, BudgetSerializer, CategorieSerializer, UserSerializer
+from .models import Exercice, Category, MyUser
+from .serializers import RegistrationSerializer, PasswordChangeSerializer, ExerciceSerializer, CategorySerializer, UserSerializer
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -23,7 +23,7 @@ def getRoutes(request):
         'http://localhost:8000/api/accounts/change-password/',
         'http://localhost:8000/api/users/',
         'http://localhost:8000/api/users/me/',
-        'http://localhost:8000/api/budgets/',
+        'http://localhost:8000/api/exercices/',
         'http://localhost:8000/api/categories/',
         'http://localhost:8000/api/token/',
         'http://localhost:8000/api/token/refresh/',
@@ -50,40 +50,31 @@ class ChangePasswordView(APIView):
         request.user.set_password(serializer.validated_data['new_password'])
         request.user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
-class BudgetFilter(django_filters.FilterSet):
-    date = filters.DateFromToRangeFilter()
 
-    class Meta:
-        model = Budget
-        fields = ("categorie", "categorie__type", "date")
 
-class BudgetViewset(ModelViewSet):
-    serializer_class = BudgetSerializer
+class ExerciceViewset(ModelViewSet):
+    serializer_class = ExerciceSerializer
     filter_backends = [
         drf_filters.OrderingFilter,
         drf_filters.SearchFilter,
         filters.DjangoFilterBackend,
-
     ]
-    filterset_class = BudgetFilter
 
     def get_queryset(self):
-        return Budget.objects.all()
+        return Exercice.objects.all()
 
 
-class CategorieViewset(ModelViewSet):
-    serializer_class = CategorieSerializer
+class CategoryViewset(ModelViewSet):
+    serializer_class = CategorySerializer
     filter_backends = [
         drf_filters.SearchFilter,
         drf_filters.OrderingFilter,
         filters.DjangoFilterBackend,
     ]
-    search_fields = ["nom"]
-    filterset_fields = ["type"]
+    search_fields = ["label"]
 
     def get_queryset(self):
-        return Categorie.objects.all()
+        return Category.objects.all()
 
 
 @action(detail=False, methods=["GET"], serializer_class=UserSerializer)

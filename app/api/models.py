@@ -44,12 +44,24 @@ class MyUser(AbstractBaseUser):
     date_of_birth = models.DateField(null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    total_amount = models.IntegerField(default=0)
 
     objects = MyUserManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    STUDENT = "student"
+    TEACHER = "teacher"
+
+    TYPE_USER = [
+        (STUDENT, "student"),
+        (TEACHER, "teacher")
+    ]
+
+    status = models.CharField(
+        max_length=7,
+        choices=TYPE_USER
+    )
 
     def __str__(self):
         return self.email
@@ -70,51 +82,20 @@ class MyUser(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
-
-class Categorie(models.Model):
-    INCOME = "INCOME"
-    OUTCOME = "OUTCOME"
-
-    TYPE_CATEGORIE = [
-        (INCOME, "revenu"),
-        (OUTCOME, "depense"),
-    ]
-
-    nom = models.CharField(max_length=150)
+class Category(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    label = models.CharField(max_length=150)
     description = models.TextField(blank=True, max_length=255)
-    type = models.CharField(
-        max_length=7,
-        choices=TYPE_CATEGORIE,
-    )
-    parent_categorie = models.ForeignKey(
-        "self",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="sous_categorie",
-    )
 
     def __str__(self):
-        return self.nom
+        return self.label
+
+class Exercice(models.Model):
+    id: models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    label: models.TextField(max_length=150)
+    answer: models.TextField(max_length=150)
+    doneBy: models.ForeignKey(MyUser, related_name='student', on_delete=models.CASCADE)
+    createdBy: models.ForeignKey(MyUser, related_name='teacher', on_delete=models.CASCADE)
+    categoryId: models.ForeignKey(Category, related_name='type_exercice', on_delete=models.CASCADE)
 
 
-class Budget(models.Model):
-    INCOME = "INCOME"
-    OUTCOME = "OUTCOME"
-
-    TYPE_BUDGET = [
-        (INCOME, "revenu"),
-        (OUTCOME, "depense"),
-    ]
-    short_description = models.TextField(blank=True, max_length=255)
-    montant = models.FloatField()
-    type = models.CharField(
-        max_length=7,
-        choices=TYPE_BUDGET,
-    )
-    date = models.DateField(default=datetime.date.today)
-    categorie = models.ForeignKey(Categorie, related_name='budgets', on_delete=models.CASCADE)
-    utilisateur = models.ForeignKey(MyUser, related_name='budgets', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"budget {self.id} de l'utilisateur {self.utilisateur.email}"
