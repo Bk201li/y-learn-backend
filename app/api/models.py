@@ -91,11 +91,14 @@ class Category(models.Model):
         return self.label
 
 class Exercice(models.Model):
-    id: models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    label: models.TextField(max_length=150)
-    answer: models.TextField(max_length=150)
-    doneBy: models.ForeignKey(MyUser, related_name='student', on_delete=models.CASCADE)
-    createdBy: models.ForeignKey(MyUser, related_name='teacher', on_delete=models.CASCADE)
-    categoryId: models.ForeignKey(Category, related_name='type_exercice', on_delete=models.CASCADE)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    label = models.TextField(max_length=150)
+    answer = models.TextField(max_length=150)
+    doneBy = models.ForeignKey(MyUser, related_name='student', on_delete=models.CASCADE)
+    createdBy = models.ForeignKey(MyUser, related_name='teacher', on_delete=models.CASCADE)
+    categoryId = models.ForeignKey(Category, related_name='type_exercice', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.label
 
 
