@@ -50,7 +50,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class ExerciceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exercice
-        fields = ['id', 'label', 'answer', 'doneBy', 'createdBy', 'categoryId']
+        fields = ['id', 'label', 'answer', 'needVM', 'doneBy', 'createdBy', 'categoryId']
 
 
 class UserSerializer(serializers.ModelSerializer):

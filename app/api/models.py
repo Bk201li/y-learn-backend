@@ -94,6 +94,7 @@ class Exercice(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     label = models.TextField(max_length=150)
     answer = models.TextField(max_length=150)
+    needVM = models.BooleanField(default=False)
     doneBy = models.ForeignKey(MyUser, related_name='student', on_delete=models.CASCADE)
     createdBy = models.ForeignKey(MyUser, related_name='teacher', on_delete=models.CASCADE)
     categoryId = models.ForeignKey(Category, related_name='type_exercice', on_delete=models.CASCADE)
